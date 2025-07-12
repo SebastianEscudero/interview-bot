@@ -1,0 +1,31 @@
+{
+  "tools": {
+    "cursor": {
+      "name": "Cursor",
+      "supports": ["code_generation", "debugging", "refactoring"],
+      "does_not_support": ["observability", "deployment"]
+    },
+    "github_copilot": {
+      "name": "GitHub Copilot",
+      "supports": ["code_generation", "test_synthesis"],
+      "does_not_support": ["debugging", "project_context"]
+    },
+    "chatgpt": {
+      "name": "ChatGPT",
+      "supports": ["code_generation", "debugging", "architecture_design"],
+      "does_not_support": ["ide_integration", "codebase_context"]
+    }
+  },
+  "capabilities": {
+    "code_generation": "Turns natural-language prompts into compilable source code",
+    "debugging": "Helps identify and fix bugs in code",
+    "observability": "Monitors production systems and logs",
+    "deployment": "Handles CI/CD and infrastructure",
+    "refactoring": "Restructures existing code without changing functionality",
+    "test_synthesis": "Generates test cases and test code",
+    "project_context": "Understands entire codebase context and relationships",
+    "architecture_design": "Helps design system architecture and patterns",
+    "ide_integration": "Deep integration with development environments",
+    "codebase_context": "Maintains context about the entire project structure"
+  }
+}
