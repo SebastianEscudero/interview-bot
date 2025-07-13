@@ -6,8 +6,11 @@ the interview is finishing so i gave the AI the update world view tool.
 Now in practice in an ai voice agent you'd call for the update once a call is done
 and make an AI analyze if we should update the world view or not.
 
-Super simple used assistant-ui for chat libraries it's a yc startup (https://www.assistant-ui.com/)
+For development i used assistant-ui for chat libraries it's a yc startup (https://www.assistant-ui.com/)
 ran gpt-4.1 for the underlying model and next for the framework to spin this up quickly.
+
+Also as you test it out it edits the data/preliminary-view.json file with contradictions and new tools you mention. So if you want
+to test it from scratch each time revert it to it's original state (the one in the repository).
 
 Below is a little technical dive:
 
