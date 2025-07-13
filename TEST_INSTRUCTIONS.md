@@ -1,30 +1,17 @@
-# Test the Interview Bot
+# Test the Simplified Interview Bot
 
-## 🚀 Quick Test
+## 🚀 Quick Test  
 1. Visit http://localhost:3001
 2. Try these test scenarios:
 
 ### Test 1: New Tool Discovery
-**Say:** "I use a tool called Windsurf for debugging"
-**Expected:** AI should ask follow-up questions and automatically update the worldview
+**Say:** "I use Claude Code for most of my development work"
+**Expected:** AI should call updateWorldview with new_tools: ["Claude Code"]
 
 ### Test 2: Contradiction Detection  
 **Say:** "I actually use Cursor for observability and monitoring"
-**Expected:** AI should probe deeper (we currently think Cursor doesn't support observability)
+**Expected:** AI should call updateWorldview with contradiction about Cursor supporting observability
 
-### Test 3: Natural Conclusion
-**Say:** "Thanks, that covers all my AI tool usage"
-**Expected:** AI should wrap up and update worldview
-
-## 🔍 What to Check
-- **Console logs**: Look for "AI updating worldview" messages
-- **preliminary-view.json**: Should be automatically updated with new tools
-- **Conversation flow**: Natural, investigative interview style
-
-## ✅ Assignment Success Criteria
-- ✅ Chatbot conducts market research interviews
-- ✅ Learns from industry participants  
-- ✅ Updates "worldview" (preliminary-view.json) based on conversations
-- ✅ Simple, clean implementation focused on core requirements
-
-**The system demonstrates: conversation → AI analysis → worldview updates**
+### Test 3: Multiple Tools
+**Say:** "I also use Windsurf for debugging and V0 for UI generation"
+**Expected:** AI should add both tools to worldview
