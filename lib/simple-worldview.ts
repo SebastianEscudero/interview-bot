@@ -1,71 +1,59 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { openai } from '@ai-sdk/openai';
-import { generateObject } from 'ai';
-import { z } from 'zod';
 
 const PRELIMINARY_VIEW_PATH = join(process.cwd(), 'data', 'preliminary-view.json');
 
-const UpdateSchema = z.object({
-  new_tools: z.array(z.string()).describe('Names of new AI tools mentioned that are not in our current view'),
-  contradictions: z.array(z.object({
-    tool: z.string(),
-    capability: z.string(),
-    description: z.string()
-  })).describe('Cases where user says a tool does something we think it doesn\'t support'),
-  interview_complete: z.boolean().describe('True if the conversation has naturally concluded')
-});
-
-export async function updateWorldview(messages: Array<{role: string, content: string}>) {
+export async function updateWorldview(findings: {
+  new_tools: string[];
+  contradictions: Array<{tool: string; capability: string; description: string}>;
+  interview_complete: boolean;
+}) {
   try {
-    const conversationText = messages.map(m => `${m.role}: ${m.content}`).join('\n\n');
+    console.log('🔍 Starting worldview update...');
     const currentView = JSON.parse(readFileSync(PRELIMINARY_VIEW_PATH, 'utf-8'));
-
-    const { object } = await generateObject({
-      model: openai('gpt-4.1'),
-      system: `You are analyzing an interview about AI tools. Extract key findings that should update our preliminary view.
-
-CURRENT VIEW: ${JSON.stringify(currentView, null, 2)}
-
-Focus on:
-1. New tools mentioned that aren't in our list
-2. Contradictions (user says a tool does something we think it doesn't support)
-3. Whether the interview is complete`,
-      prompt: conversationText,
-      schema: UpdateSchema,
-    });
+    console.log('📖 Current view loaded, existing tools:', Object.keys(currentView.tools));
+    console.log('🎯 Direct findings received:', JSON.stringify(findings, null, 2));
 
     // Update the view
     let updated = false;
 
     // Add new tools
-    object.new_tools.forEach(toolName => {
+    console.log('🔧 Processing new tools...');
+    findings.new_tools.forEach(toolName => {
       const toolKey = toolName.toLowerCase().replace(/\s+/g, '_');
+      console.log(`- Checking tool: "${toolName}" (key: "${toolKey}")`);
       if (!currentView.tools[toolKey]) {
+        console.log(`✅ Adding new tool: ${toolName}`);
         currentView.tools[toolKey] = {
           name: toolName,
           supports: [],
           does_not_support: []
         };
         updated = true;
+      } else {
+        console.log(`⚠️ Tool already exists: ${toolName}`);
       }
     });
 
     // Track contradictions (for now just log them - could add to a separate file)
-    if (object.contradictions.length > 0) {
-      console.log('Contradictions found:', object.contradictions);
+    if (findings.contradictions.length > 0) {
+      console.log('⚡ Contradictions found:', findings.contradictions);
       updated = true;
     }
 
     if (updated) {
+      console.log('💾 Writing updated view to file...');
       writeFileSync(PRELIMINARY_VIEW_PATH, JSON.stringify(currentView, null, 2));
+      console.log('✅ File updated successfully!');
+    } else {
+      console.log('ℹ️ No updates needed.');
     }
 
     return {
       success: true,
-      new_tools: object.new_tools,
-      contradictions: object.contradictions,
-      interview_complete: object.interview_complete,
+      new_tools: findings.new_tools,
+      contradictions: findings.contradictions,
+      interview_complete: findings.interview_complete,
       updated
     };
 
