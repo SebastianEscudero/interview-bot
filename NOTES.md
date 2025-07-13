@@ -1,3 +1,16 @@
+# Extra thoughts & Notes
+
+This is a very small demo of what could be a world-view updating interview bot.
+Since it's a chat interface i decided that it should save based on when it feels
+the interview is finishing so i gave the AI the update world view tool.
+Now in practice in an ai voice agent you'd call for the update once a call is done
+and make an AI analyze if we should update the world view or not.
+
+Super simple used assistant-ui for chat libraries it's a yc startup (https://www.assistant-ui.com/)
+ran gpt-4.1 for the underlying model and next for the framework to spin this up quickly.
+
+Below is a little technical dive:
+
 # AI Tools Interview Bot - Development Notes
 
 ## Project Overview
